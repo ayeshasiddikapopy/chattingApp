@@ -42,6 +42,7 @@ const GroupList = () => {
     let [groupName, setGroupname] = useState(''); // [] hobe, how?
     let [groupTag, setGrouptag] = useState('');
     let [groupList, setGrouplist] = useState([]);
+    let [groupreq , setgroupreq] = useState([])
     //modal
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -49,19 +50,16 @@ const GroupList = () => {
 
     //create group
     let handleCreatgroup = () => {
-        console.log('create')
         set(push(ref(db,'groups')),{
             groupname : groupName,
             grouptag : groupTag,
             adminid: data.userdata.userInfo.uid,
             adminname: data.userdata.userInfo.displayName,
-        
         }).then(()=>{
             setOpen(false)
         })
-
     }
-    //grouplist
+   // grouplist
     useEffect ( () => {
         const mygroupRef = ref(db,'groups')
         onValue(mygroupRef, (snapshot) => {
@@ -69,11 +67,44 @@ const GroupList = () => {
             snapshot.forEach((item) => {
                 if(data.userdata.userInfo.uid !== item.val().adminid ){
                     arr.push({...item.val(), groupid: item.key})
+                    // arr.push(item.val().id)
                 }
             })
             setGrouplist(arr)
         })
     },[]);
+
+//somehfh
+    useEffect ( () => {
+        const mygroupRef = ref(db,'grouprequest')
+        onValue(mygroupRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach((item) => {
+                if(data.userdata.userInfo.uid == item.val().userid){
+                    //arr.push({...item.val(), groupid: item.key})
+                     arr.push(item.val().userid)
+                }
+            })
+            setgroupreq(arr)
+        })
+    },[]);
+    console.log(groupList)
+
+    // useEffect ( () => {
+    //     const mygroupRef = ref(db,'grouprequest')
+    //     onValue(mygroupRef, (snapshot) => {
+    //         let arr = []
+    //         snapshot.forEach((item) => {
+    //             if(data.userdata.userInfo.uid == item.val().userid
+    //             ){
+    //                 // arr.push({...item.val(), groupid: item.key})
+    //                 arr.push(item.val().userid)
+    //             }
+    //         })
+    //         setGrouplist(arr)
+    //     })
+    // },[]);
+    // console.log(groupList)
 
     //group join data collection
     let handlegroupJoin = (item) => {
@@ -83,7 +114,6 @@ const GroupList = () => {
             userid : data.userdata.userInfo.uid,
             username : data.userdata.userInfo.displayName,
         }).then(() => {
-            console.log('joined')
             toast("join request sent")
         })
     }
@@ -118,10 +148,16 @@ const GroupList = () => {
                         <ListItem title = {item.grouptag} className = 'Group_Subtitle-lower' as='p' />
                     </div>
                     </div>
+
+                    {groupreq.includes(item.userid) ? 
+                     <Listbutton listbutton = {ListButton} title='somnjfdnv' />
+                    :
                     <div className='box_button'>
                         <Listbutton listbutton = {ListButton} title='join' onClick={() => handlegroupJoin (item)}/>
                         <Listbutton listbutton = {ListButton} title='delete' onClick={() => handlegroupDelet (item)}/>
                     </div>
+                    }
+                    
                 </div>
             ))}
            </div>

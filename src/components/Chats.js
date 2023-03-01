@@ -8,7 +8,8 @@ import { getDatabase, ref, onValue, remove, set, push} from "firebase/database";
 import { useSelector } from 'react-redux';
 import moment from 'moment/moment';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { getStorage, ref as sref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref as sref, uploadBytes } from "firebase/storage";
+import { Link } from '@mui/material';
  
 
 const Chats = () => {
@@ -18,7 +19,7 @@ const Chats = () => {
     let [msg , setmsg] = useState('')
     let [messaglist , setMessagelist] = useState([])
 
-    // message object // data collection
+    // message object || data collection
     let handleSendmsg = () => {
         if(data.activeUser.activeChatuser.status == 'single'){
             set(push(ref(db, 'singlemsg')) , {
@@ -39,9 +40,10 @@ const Chats = () => {
                 setmsg('')
             })
         }
+        console.log('jhj')
     }
 
-    // messaging send / recieve
+    // messaging send || recieve
     useEffect(() => {
         onValue((ref(db, 'singlemsg')), (snapshot) => {
             let arr = [];
@@ -86,10 +88,30 @@ const Chats = () => {
 
     //image upload
     let handleImgUpload = (e) => {
-        console.log(e.target.files[0])
         const storageRef = sref(storage,'singlemsgImg/'+ e.target.files[0].name);
         uploadBytes(storageRef, e.target.files[0]).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
+            getDownloadURL(storageRef).then((downloadimgurl) => {
+                console.log('singlmsg',downloadimgurl)
+                if(data.activeUser.activeChatuser.status == 'single'){
+                    set(push(ref(db, 'singlemsg')) , {
+                        whosendId: data.userdata.userInfo.uid,
+                        whosendName: data.userdata.userInfo.displayName,
+                        whoReceiveName: data.userdata.userInfo.uid == data.activeUser.activeChatuser.senderid 
+                        ? data.activeUser.activeChatuser.receivername
+                        : data.activeUser.activeChatuser.sendername,
+        
+                        whoReceiveId: data.userdata.userInfo.uid == data.activeUser.activeChatuser.senderid 
+                        ? data.activeUser.activeChatuser.receiverid
+                        : data.activeUser.activeChatuser.senderid,
+                        img:downloadimgurl,
+                        date: `${new Date().getFullYear()}-${
+                            new Date().getMonth() + 1
+                          }-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
+                    }).then(() => {
+                        setmsg('')
+                    })
+                }
+            })
         });
     }
 
@@ -147,6 +169,9 @@ const Chats = () => {
                                 <div className='chat_itemText-right '>   
                                     <ListItem title ={item.msg} className= 'chat_item-sizesRight' as='p' />
                                 </div> 
+                                <div className='chat_itemText-right chat_itemImg-right'>   
+                                    <Image imgsrc={item.img} className='chatImg_item'/>
+                                </div>
                                 <div className='chat_itemText-right '>
                                     <p className='chat_dates'>{moment(item.date, "YYYYMMDD hh:mm").fromNow()}</p>
                                 </div>
@@ -174,7 +199,7 @@ const Chats = () => {
                         </div>
                     </div>
                     <div className='send' onClick={handleSendmsg}>
-                        <RiSendPlaneFill className='box_icon send_icon'/>
+                       <Link><RiSendPlaneFill className='box_icon send_icon'/></Link> 
                     </div>
                 </div>
             </div>

@@ -130,17 +130,16 @@ const UserList = () => {
         });
 
     },[]);
-    
-//  console.log(block)
-// //  console.log(data.userdata.userInfo.uid)
-//  userList.map((item, index) => {
-//      if(block.length > 0 ){
-//       console.log(block.includes(item.id))
-//       if(block.includes(item.id)){
-//         console.log('blocked ')
-//       }
-//     }
-//  })
+ console.log(block)
+//  console.log(data.userdata.userInfo.uid)
+ userList.map((item, index) => {
+     if(block.length > 0 ){
+      console.log(block.includes(item.id))
+      if(block.includes(item.id)){
+        console.log('blocked ')
+      }
+    }
+ })
 
   return (
     <>
@@ -181,13 +180,8 @@ const UserList = () => {
                                 <Listbutton listbutton = {ListButton} onClick={() => handleCanclefriends(item)} title='cancel' />
                             </div>)
                            :
-                           block.includes(item.id) 
-                           ? (
-                            <div className='box_button'>
-                                 <Listbutton listbutton = {ListButton} title='blocked'/>
-                             </div>) 
-                            :
-                           (<div className='box_button'>
+                           (
+                           <div className='box_button'>
                                 <Listbutton listbutton = {ListButton} title='send request' onClick={()=> handlefriendreq(item)}/>
                             </div>) 
                         }
