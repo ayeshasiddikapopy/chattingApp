@@ -9,6 +9,7 @@ import { useSelector , useDispatch} from 'react-redux';
 import { toast , ToastContainer } from 'react-toastify';
 import { activeChatuser } from '../slices/activeChatslice';
 
+
 const ListButton = styled(Button)({
     padding: '5px 13px',
     backgroundColor: '#5F35F5',
@@ -26,8 +27,8 @@ const ListButton = styled(Button)({
 });
 const Friends = () => {
     const db = getDatabase();
-    let data = useSelector(state => state)
     let dispatch = useDispatch()
+    let data = useSelector(state => state)
     let [friends, setFriends] = useState([]);
 
     //friends
@@ -108,7 +109,7 @@ const Friends = () => {
                             :
                             <ListItem title ={item.receivername} className= 'Group_Subtitle' as='h2' />
                             }
-                            <ListItem title ={item.date} className= 'Group_Subtitle-lower' as='p' />
+                            <ListItem title ={item.lastmsg} className= 'Group_Subtitle-lower last_msg' as='p' />
                         </div>
                     </div>
                     <div className='box_button'>

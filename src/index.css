@@ -167,7 +167,11 @@ img{
   font-weight: 500;
   font-family: 'Poppins', sans-serif;
 }
-
+.last_msg{
+  width: 200px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
 .group_box{
   display: flex;
   align-items: center;
@@ -263,6 +267,7 @@ img{
   padding: 34px 50px;
   position: relative;
 }
+
 .groupImg{
   width: 70px;
   height: 70px;
@@ -273,10 +278,12 @@ img{
   height: 90px;
   position: relative;
 }
+
 .chatImg_item, .groupImg_item{
   width: 100%;
   height: 100%;
 }
+
 .online_dot{
   width: 20px;
   height: 20px;
@@ -291,21 +298,26 @@ img{
   bottom: 5%;
   right: 5%;
 }
+
 .box_title-border{
   border-bottom: 1px solid rgba(0, 0, 0, 0.249);
 }
+
 .chatBox_item{
   height: 65vh;
 }
+
 .chat_profile{
   text-align: center;
 }
+
 .chat_profileImg{
   width: 100px;
   height: 100px;
   margin: 50px auto 20px auto;
   position: relative;
 }
+
 .chat_item{
   padding: 40px 0;
   position: relative;
@@ -344,10 +356,15 @@ img{
   color: #fff;
   background:#5F35F5 ;
 }
-.chat_itemImg-right{
+
+.chat_itemImg-right, .chat_itemImg-left {
   width: 250px;
   height: 250px;
   margin: 0 0 0 auto;
+}
+
+.chat_itemImg-left {
+  margin: 0 auto 0 0;
 }
 
 .chat_dates{
@@ -387,6 +404,7 @@ img{
 
 .input_icon{ 
   display: flex;
+  align-items: center;
 }
 
 .sticker_icon{
@@ -411,5 +429,113 @@ img{
   font-size: 20px;
   text-align: center;
 }
+/* camera start here */
 
+.camera{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+.cam{
+  font-size: 20px;
+}
+
+.camoff_item{
+  position: absolute;
+  bottom: 1%;
+  left: 55%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.camoff {
+  color: #fe0d0d;
+  font-size: 30px;
+  width: 70px;
+  height: 70px;
+  line-height: 50px;
+  background: #fff;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+/* camera ends here */
+/* audio start here */
+
+.audio_btn{
+  font-size: 20px;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+.audio_btn button{
+  padding: 15px 10px;
+  border: 0px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  margin-right: 10px;
+}
+
+.recording {
+  left: 4%;
+  bottom: 7%;
+  position: absolute;
+  width: 81% !important;
+  padding: 22px !important;
+  transition: all .2s ease-out;
+  border-radius: 12px;
+  -webkit-transition: all .2s ease-out;
+  -moz-transition: all .2s ease-out;
+  -ms-transition: all .2s ease-out;
+  -o-transition: all .2s ease-out;
+}
+
+.audio_item{
+  display: flex;
+  align-items: center;
+}
+
+.stop-recItem{
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  background: #F1F1F1;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  margin-left: 10px;
+  padding-top: 5px;
+}
+
+.stop-rec{
+  color: #fe0d0d;
+  font-size: 20px !important;
+}
+
+audio {
+  position: absolute;
+  bottom: 4%;
+  left: 45%;
+  width: 46%;
+}
+/* audio end here */
+
+.epr-main{
+  position: absolute !important;
+  bottom: 13%;
+  right: 4%;
+}
 /* chatting end */

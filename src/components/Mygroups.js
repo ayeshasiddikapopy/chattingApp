@@ -71,7 +71,6 @@ const Mygroups = () => {
     //member request
     const handleOpen = (id) => {
         setOpen(true)
-        console.log(id)
         const groupmemberRef = ref(db,'grouprequest')
         onValue(groupmemberRef, (snapshot) => {
             let arr = []
@@ -81,7 +80,6 @@ const Mygroups = () => {
                 }
             })
             setGroupRequestList(arr)
-            console.log('loader')
             // setTimeout(()=>{
             //    console.log('lo')
             //   },500)
@@ -89,11 +87,9 @@ const Mygroups = () => {
         })
     };
 
-    //remove
+    //delet member rquest
     let handledelet = (item) => {
-        remove(ref(db, 'grouprequest/' + item.memberid)).then((
-            console.log("delete")
-        )).then(() =>{
+        remove(ref(db, 'grouprequest/' + item.memberid)).then(() =>{
             console.log('removed')
         })
     }
@@ -113,8 +109,8 @@ const Mygroups = () => {
     
     // group Member info
     let handleInfoOpen = (id) => {
-        setOpeninfo(true)
         console.log(id)
+        setOpeninfo(true)
         onValue((ref(db, 'groupMembers')), (snapshot) => {
             let arr = []
             snapshot.forEach((item) => {
@@ -123,6 +119,15 @@ const Mygroups = () => {
                 }
             })
             setGroupmember(arr)   
+        })
+    }
+
+    //member remove
+    let handleRemove = (item) => {
+        console.log(item)
+        remove(ref(db,'groupMembers/' + item.memberid)).then(() => {
+            console.log('delet')
+            toast('removed')
         })
     }
 
@@ -142,8 +147,8 @@ const Mygroups = () => {
                                 <Image imgsrc='../assets/groups.png' className='groupImg_item'/>
                             </div>
                         <div className='group_subTitle'>
-                        <ListItem title ={item.groupname} className= 'Group_Subtitle' as='h2' />
-                        <ListItem title ={item.grouptag} className= 'Group_Subtitle-lower' as='p' />
+                            <ListItem title ={item.groupname} className= 'Group_Subtitle' as='h2' />
+                            <ListItem title ={item.grouptag} className= 'Group_Subtitle-lower' as='p' />
                         </div>
                         </div>
                         <div className='box_button'>
@@ -218,7 +223,7 @@ const Mygroups = () => {
                             </div>
                             </div>
                             <div className='box_button'>
-                                <Listbutton listbutton = {ListButton} title='block' />
+                                <Listbutton listbutton = {ListButton} title='remove' onClick={() => handleRemove(item)} />
                             </div>
                         </div>
                         )) 

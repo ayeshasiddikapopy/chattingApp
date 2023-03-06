@@ -3,9 +3,10 @@ import Image from './Image';
 import Listbutton from './Listbutton';
 import { styled, Button, Box ,Typography ,Modal} from '@mui/material';
 import ListItem from './ListItem';
-import InputBox from './InputBox';
 import { getDatabase, ref, onValue, remove, set, push} from "firebase/database";
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch} from 'react-redux';
+import { toast , ToastContainer } from 'react-toastify';
+import { activeChatuser } from '../slices/activeChatslice';
 
 const style = {
     position: 'absolute',
@@ -37,6 +38,7 @@ const ListButton = styled(Button)({
 
 const Joingroup = () => {
     let db = getDatabase();
+    let dispatch = useDispatch()
     let data = useSelector(state => state)
     let [groupList, setGrouplist] = useState([]);
     let [groupMember , setGroupmember] = useState([]);
@@ -85,7 +87,8 @@ const Joingroup = () => {
             setGroupmember(arr)
         })
     },[]);
- //all group list
+    
+    //all group list
     useEffect ( () => {
         const starCountRef = ref(db, "groups");
         onValue(starCountRef, (snapshot) => {
@@ -103,6 +106,13 @@ const Joingroup = () => {
             setGrouplist(arr)
         })
     },[groupMember.length]);
+
+    //group chat
+    // chatting
+    let handleActiveChat = (item) => {
+        dispatch(activeChatuser({...item, status:'group'}))
+        localStorage.setItem('activeUser', JSON.stringify(item))
+    }
   
     return (
     <React.Fragment>
@@ -113,15 +123,15 @@ const Joingroup = () => {
             <div className='boxHolder'>
             {/* grouplist data fetching */}
             {groupList.map((item) => (
-                <div className='box_list'>
+                <div className='box_list' onClick={() => handleActiveChat(item)}>
                     <div className='group_box'>
                         <div className='groupImg'>
                             <Image imgsrc='../assets/groups.png' className='groupImg_item'/>
                         </div>
                     <div className='group_subTitle'>
-                        <ListItem title = {item.adminname} className = 'Group_Subtitle' as='h2' />
                         <ListItem title = {item.groupname} className = 'Group_Subtitle' as='h2' />
                         <ListItem title = {item.grouptag} className = 'Group_Subtitle-lower' as='p' />
+                        <ListItem title = {item.adminname} className = 'Group_Subtitle-lower' as='h4' />
                     </div>
                     </div>
                     <div className='box_button'>
@@ -132,7 +142,6 @@ const Joingroup = () => {
             ))}
            </div>
         </div>
-        
     </React.Fragment>
   )
 }

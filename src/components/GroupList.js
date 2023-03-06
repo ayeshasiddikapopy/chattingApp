@@ -42,7 +42,8 @@ const GroupList = () => {
     let [groupName, setGroupname] = useState(''); // [] hobe, how?
     let [groupTag, setGrouptag] = useState('');
     let [groupList, setGrouplist] = useState([]);
-    let [groupreq , setgroupreq] = useState([])
+    let [groupreq , setgroupreq] = useState([]);
+    let [groupMember , setGroupmember] = useState([]);
     //modal
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -59,7 +60,8 @@ const GroupList = () => {
             setOpen(false)
         })
     }
-   // grouplist
+
+    // grouplist
     useEffect ( () => {
         const mygroupRef = ref(db,'groups')
         onValue(mygroupRef, (snapshot) => {
@@ -74,39 +76,7 @@ const GroupList = () => {
         })
     },[]);
 
-//somehfh
-    useEffect ( () => {
-        const mygroupRef = ref(db,'grouprequest')
-        onValue(mygroupRef, (snapshot) => {
-            let arr = []
-            snapshot.forEach((item) => {
-                if(data.userdata.userInfo.uid == item.val().userid){
-                    //arr.push({...item.val(), groupid: item.key})
-                     arr.push(item.val().userid)
-                }
-            })
-            setgroupreq(arr)
-        })
-    },[]);
-    console.log(groupList)
-
-    // useEffect ( () => {
-    //     const mygroupRef = ref(db,'grouprequest')
-    //     onValue(mygroupRef, (snapshot) => {
-    //         let arr = []
-    //         snapshot.forEach((item) => {
-    //             if(data.userdata.userInfo.uid == item.val().userid
-    //             ){
-    //                 // arr.push({...item.val(), groupid: item.key})
-    //                 arr.push(item.val().userid)
-    //             }
-    //         })
-    //         setGrouplist(arr)
-    //     })
-    // },[]);
-    // console.log(groupList)
-
-    //group join data collection
+    //group join data collection/ group request
     let handlegroupJoin = (item) => {
         set(push(ref(db,'grouprequest')),{
             groupid : item.groupid,
@@ -116,7 +86,23 @@ const GroupList = () => {
         }).then(() => {
             toast("join request sent")
         })
+        console.log(item)
     }
+
+    //grouprequest
+    useEffect (() => {
+        const mygroupRef = ref(db,'grouprequest')
+        onValue(mygroupRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach((item) => {
+                if(data.userdata.userInfo.uid == item.val().userid){
+                    //arr.push({...item.val(), groupid: item.key})
+                    arr.push(item.val().groupid)
+                }
+            })
+            setgroupreq(arr)
+        })
+    },[]);
 
     // delelet 
     let handlegroupDelet = (item) =>{
@@ -127,6 +113,25 @@ const GroupList = () => {
         })
     }
 
+    //member  
+    useEffect(() => {
+        onValue((ref(db, 'groupMembers')), (snapshot) => {
+            let arr = []
+            snapshot.forEach((item) => {
+                if(item.val().userid == data.userdata.userInfo.uid){
+                   arr.push(item.val().groupid)
+                }
+            })
+            setGroupmember(arr)   
+        })
+    },[])
+    
+    //cancel request
+    let handleCancle = (item) => {
+       console.log(item)
+       remove(ref(db, 'grouprequest/' + item.groupid))
+    }
+  
   return (
     <React.Fragment>
         <div className='groupBox_holder'>
@@ -137,27 +142,39 @@ const GroupList = () => {
                 </div>
             </div>
             <div className='boxHolder'>
+
             {groupList.map((item) => (
                 <div className='box_list'>
                     <div className='group_box'>
                         <div className='groupImg'>
                             <Image imgsrc='../assets/groups.png' className='groupImg_item'/>
                         </div>
-                    <div className='group_subTitle'>
-                    <ListItem title = {item.groupname} className = 'Group_Subtitle' as='h2' />
-                        <ListItem title = {item.grouptag} className = 'Group_Subtitle-lower' as='p' />
-                    </div>
+                        <div className='group_subTitle'>
+                            <ListItem title = {item.groupname} className = 'Group_Subtitle' as='h2' />
+                            <ListItem title = {item.grouptag} className = 'Group_Subtitle-lower' as='p' />
+                            <ListItem title = {item.adminname} className = 'Group_Subtitle-lower' as='p' />
+                        </div>
                     </div>
 
-                    {groupreq.includes(item.userid) ? 
-                     <Listbutton listbutton = {ListButton} title='somnjfdnv' />
-                    :
+                    { groupreq.length > 0 && groupreq.includes(item.groupid) 
+                    ? (
+                        <div className='box_button'>                     
+                            <Listbutton listbutton = {ListButton} title='pending' />
+                            <Listbutton listbutton = {ListButton} title='cancel' onClick={() => handleCancle(item)} />
+                        </div>
+                    ) 
+                    : groupMember.length > 0 &&  groupMember.includes(item.groupid) 
+                    ? ( 
+                        <div className='box_button'>                     
+                            <Listbutton listbutton = {ListButton} title='joined' />
+                        </div>
+                    ):(
                     <div className='box_button'>
                         <Listbutton listbutton = {ListButton} title='join' onClick={() => handlegroupJoin (item)}/>
                         <Listbutton listbutton = {ListButton} title='delete' onClick={() => handlegroupDelet (item)}/>
                     </div>
+                    )
                     }
-                    
                 </div>
             ))}
            </div>
@@ -182,7 +199,6 @@ const GroupList = () => {
                 </Box>
             </Modal> 
         </div>
-       
     </React.Fragment>
   )
 }

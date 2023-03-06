@@ -49,6 +49,7 @@ const Registration = () => {
   let [show, setShow] = useState(false);
   let [progress , setProgress] = useState(0);
   let [loader, setLoader] = useState(false);
+ 
 
 
   let handleForm = (e) => {
@@ -161,7 +162,11 @@ const Registration = () => {
                 },2000)
             })
           })
-        }).catch((error) => {
+        }).then(() => {
+          setFormData('')
+        })
+        
+        .catch((error) => {
           const errorCode = error.code;
           
           if(errorCode.includes("auth/email-already-in-use")){
@@ -195,20 +200,20 @@ const Registration = () => {
           <p className="regSubHeading">Free register and you can enjoy it</p>
         </Header>
         <div className='inputContainer'>
-          <InputBox type = 'email' textChange = {handleForm} name = 'email' className='reginput' label="email Address" variant='outlined' />
+          <InputBox type = 'email' textChange = {handleForm} name = 'email' className='reginput' label="email Address" variant='outlined' value={formData}/>
            {error.email &&
             <Alert className='error' variant="filled" severity="error">
                 {error.email}
             </Alert>
            }
-          <InputBox type = 'text' textChange = {handleForm} name = 'fullName' className='reginput' label="Full Name" variant='outlined' />
+          <InputBox type = 'text' textChange = {handleForm} name = 'fullName' className='reginput' label="Full Name" variant='outlined' value={formData}/>
           {error.fullName &&
             <Alert className='error' variant="filled" severity="error">
                 {error.fullName}
             </Alert>
            }
            <div style={{width:'100%', position:'relative'}}>
-          <InputBox type = {show ? "text" : "password"} textChange = {handleForm} name = 'password' className='reginput' label="password" variant='outlined' />
+          <InputBox type = {show ? "text" : "password"} textChange = {handleForm} name = 'password' className='reginput' label="password" variant='outlined' value={formData}/>
           {show
           ?
           <AiFillEye onClick={() => setShow(false)} className='eyeicon'/>

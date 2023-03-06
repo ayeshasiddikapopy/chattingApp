@@ -72,6 +72,7 @@ const Login = () => {
     email : '',
     password : ''
   })
+  let [inp,setInp] = useState('')
 
 
   let handleForm = (e) => {
@@ -134,6 +135,7 @@ const Login = () => {
       }
     }).then(()=> {
       setLoader(false)
+      setInp('')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -164,7 +166,7 @@ const Login = () => {
   }
 
     return (
-        <>
+        <React.Fragment>
           <Grid container spacing={2}>
           <ToastContainer
             position="bottom-center"
@@ -186,10 +188,10 @@ const Login = () => {
                     <Image onClick = {handleGoogle} className='google__img' imgsrc='assets/google.png' />
                   </Header>
                   <div className='inputContainer'>
-                    <InputBox textChange={handleForm} name="email" className='reginput' label="email Address" variant='standard' />
+                    <InputBox textChange={handleForm} name="email" className='reginput' label="email Address" variant='standard' value={inp}/>
                     {/* <InputBox textChange={handleForm} name="password" className='reginput' label="password" variant='standard' /> */}
                     <div style={{width:'100%', position:'relative'}}>
-                      <InputBox type = {show ? "text" : "password"} textChange = {handleForm} name = 'password' className='reginput' label="password" variant='standard' />
+                      <InputBox type = {show ? "text" : "password"} textChange = {handleForm} name = 'password' className='reginput' label="password" variant='standard' value={inp}/>
                       {show
                       ?
                       <AiFillEye onClick={() => setShow(false)} className='eyeicon'/>
@@ -241,7 +243,7 @@ const Login = () => {
               </Box>
             </Modal>
           </Grid> 
-        </>
+        </React.Fragment>
       )
 }
 
